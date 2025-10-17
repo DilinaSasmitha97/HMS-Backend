@@ -6,13 +6,13 @@ const Patient = require('../models/Patient');
 const createPatient = async (req, res) => {
     try {
         // Destructure fields from the request body
-        const { 
-            name, 
-            email, 
-            contactNumber, 
-            address, 
-            medicalRecordPin, 
-            qrCodeData 
+        const {
+            name,
+            email,
+            contactNumber,
+            address,
+            medicalRecordPin,
+            qrCodeData
         } = req.body;
 
         // Check if a patient with the given email already exists (based on unique constraint)
