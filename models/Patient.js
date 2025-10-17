@@ -1,35 +1,28 @@
 const mongoose = require('mongoose');
 
-const PatientSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
+const patientSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    contactNumber: { type: String, trim: true },
+    address: { type: String, trim: true },
+    // Hashed password for patient email/password login
+    passwordHash: { type: String, select: false },
+    // PIN used by doctors to access patient records; keep hidden by default
+    pin: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 4,
+      maxlength: 8,
+      unique: true,
+      select: false,
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
-    contactNumber: {
-        type: String,
-        trim: true
-    },
-    address: {
-        type: String,
-        trim: true
-    },
-    medicalRecordPin: { // Critical for security feature (should be hashed)
-        type: String,
-        required: true
-    },
-    qrCodeData: {
-        type: String
-    }
-    // OneToMany appointments relationship is handled by querying the Appointment model
-}, {
-    timestamps: true
-});
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Patient', PatientSchema);
+// Ensure a unique index on PIN at the database level as well
+patientSchema.index({ pin: 1 }, { unique: true });
+
+module.exports = mongoose.model('Patient', patientSchema);
